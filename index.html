@@ -1287,7 +1287,180 @@
 </head>
 <body>
 
-<div class="bg-orbs">
+<!-- html2canvas for result screenshot -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  /* Share card — hidden, rendered offscreen for screenshot */
+  .share-card {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 600px;
+    background: #04050f;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 2.5rem;
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+  }
+
+  .share-card-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(236,72,153,0.15) 0%, transparent 60%);
+    border-radius: 24px;
+  }
+
+  .share-card-inner { position: relative; z-index: 1; }
+
+  .share-card-brand {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .share-card-brand-over { color: #f1f5f9; }
+  .share-card-brand-score {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .share-card-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8fa5bf;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 0.75rem;
+  }
+
+  .share-card-score {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 0.25rem;
+  }
+
+  .share-card-out {
+    font-size: 0.75rem;
+    color: #8fa5bf;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 1rem;
+  }
+
+  .share-card-verdict {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .share-card-tagline {
+    font-size: 0.85rem;
+    color: #c4d0e0;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .share-card-bar-wrap {
+    margin-bottom: 1.75rem;
+  }
+
+  .share-card-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.48rem;
+    color: #8fa5bf;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.5px;
+  }
+
+  .share-card-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .share-card-bar-zones {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .share-card-zone-green { background: rgba(16,185,129,0.15); flex: 8; }
+  .share-card-zone-amber { background: rgba(245,158,11,0.15); flex: 9; }
+  .share-card-zone-red   { background: rgba(239,68,68,0.15); flex: 10; }
+
+  .share-card-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .share-card-marker {
+    position: absolute;
+    top: 50%;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid #04050f;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .share-card-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .share-card-cta-text {
+    font-size: 0.7rem;
+    color: #8fa5bf;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .share-card-cta-text strong {
+    color: #f1f5f9;
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .share-card-cta-url {
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Share loading overlay */
+  .btn-share.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+</style>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
@@ -1422,7 +1595,45 @@
 
     <div class="result-actions">
       <button class="btn-retake" onclick="goHome()">← Try Another Style</button>
-      <button class="btn-share" onclick="shareResult()">Share Your Result ↗</button>
+      <button class="btn-share" id="btnShare" onclick="shareResult()">Share My Score ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden share card rendered as image -->
+<div class="share-card" id="shareCard">
+  <div class="share-card-bg"></div>
+  <div class="share-card-inner">
+    <div class="share-card-brand">
+      <span class="share-card-brand-over">Overtrade</span><span class="share-card-brand-score">Score</span>
+    </div>
+    <div class="share-card-eyebrow" id="scEyebrow"></div>
+    <div class="share-card-score" id="scScore"></div>
+    <div class="share-card-out">/ 27 points</div>
+    <div class="share-card-verdict" id="scVerdict"></div>
+    <div class="share-card-tagline" id="scTagline"></div>
+    <div class="share-card-bar-wrap">
+      <div class="share-card-bar-labels">
+        <span>Disciplined (0–8)</span>
+        <span>Warning Signs (9–17)</span>
+        <span>Overtrading (18–27)</span>
+      </div>
+      <div class="share-card-bar-track">
+        <div class="share-card-bar-zones">
+          <div class="share-card-zone-green"></div>
+          <div class="share-card-zone-amber"></div>
+          <div class="share-card-zone-red"></div>
+        </div>
+        <div class="share-card-bar-fill" id="scBarFill" style="width:0%"></div>
+        <div class="share-card-marker" id="scMarker" style="left:0%"></div>
+      </div>
+    </div>
+    <div class="share-card-cta">
+      <div class="share-card-cta-text">
+        <strong>What's your OvertradeScore?</strong>
+        Find out at overtradescore.github.io
+      </div>
+      <div class="share-card-cta-url">overtradescore.github.io</div>
     </div>
   </div>
 </div>
@@ -1589,11 +1800,90 @@ function showResult() {
 function shareResult() {
   const quiz = QUIZZES[currentQuiz];
   const styleLabel = quiz.label;
-  let outcome = totalScore <= 8 ? quiz.outcomes.green.verdict : totalScore <= 17 ? quiz.outcomes.amber.verdict : quiz.outcomes.red.verdict;
-  const text = `I just took the "Am I Overtrading?" quiz as a ${styleLabel} and scored ${totalScore}/27 — ${outcome}. Find out where you stand 👇 overtradescore.github.io`;
+  const outcomeKey = totalScore <= 8 ? 'green' : totalScore <= 17 ? 'amber' : 'red';
+  const outcome = quiz.outcomes[outcomeKey];
+  const pct = (totalScore / 27 * 100);
+
+  // Colour maps
+  const colours = {
+    green: { score: '#34d399', marker: '#10b981' },
+    amber: { score: '#fbbf24', marker: '#f59e0b' },
+    red:   { score: '#f87171', marker: '#ef4444' }
+  };
+  const col = colours[outcomeKey];
+
+  // Populate share card
+  document.getElementById('scEyebrow').textContent = styleLabel + ' · OvertradeScore Result';
+  document.getElementById('scScore').style.color = col.score;
+  document.getElementById('scScore').textContent = totalScore;
+  document.getElementById('scVerdict').textContent = outcome.verdict;
+  document.getElementById('scVerdict').style.color = col.score;
+  document.getElementById('scTagline').textContent = '"' + outcome.tagline + '"';
+  document.getElementById('scBarFill').style.width = pct + '%';
+  document.getElementById('scBarFill').style.background = `linear-gradient(90deg, ${col.marker}, ${col.score})`;
+  document.getElementById('scMarker').style.left = pct + '%';
+  document.getElementById('scMarker').style.background = col.score;
+  document.getElementById('scMarker').style.boxShadow = `0 0 10px ${col.score}`;
+
+  // Check if Web Share API with files is supported (mobile)
+  const btn = document.getElementById('btnShare');
+  btn.textContent = 'Generating...';
+  btn.classList.add('loading');
+
+  html2canvas(document.getElementById('shareCard'), {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    btn.textContent = 'Share My Score ↗';
+    btn.classList.remove('loading');
+
+    canvas.toBlob(blob => {
+      const file = new File([blob], 'my-overtradescore.png', { type: 'image/png' });
+
+      // Try native share with image (works on mobile)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+          title: 'My OvertradeScore',
+          text: `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict} as a ${styleLabel}. Find out what yours is 👇`,
+          url: 'https://overtradescore.github.io',
+          files: [file]
+        }).catch(() => fallbackShare(canvas));
+      } else {
+        fallbackShare(canvas);
+      }
+    }, 'image/png');
+  }).catch(() => {
+    btn.textContent = 'Share My Score ↗';
+    btn.classList.remove('loading');
+    fallbackTextShare();
+  });
+}
+
+function fallbackShare(canvas) {
+  // Try downloading the image
+  try {
+    const link = document.createElement('a');
+    link.download = 'my-overtradescore.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('Image saved! Share it anywhere 🎉');
+  } catch(e) {
+    fallbackTextShare();
+  }
+}
+
+function fallbackTextShare() {
+  const quiz = QUIZZES[currentQuiz];
+  const outcomeKey = totalScore <= 8 ? 'green' : totalScore <= 17 ? 'amber' : 'red';
+  const outcome = quiz.outcomes[outcomeKey];
+  const text = `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict} as a ${quiz.label}. Find out what yours is 👇 overtradescore.github.io`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
-  } else { showToast('Share: ' + text); }
+  } else {
+    showToast(text);
+  }
 }
 
 function showToast(msg) {
