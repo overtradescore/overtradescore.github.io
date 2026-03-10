@@ -1590,7 +1590,7 @@ function shareResult() {
   const quiz = QUIZZES[currentQuiz];
   const styleLabel = quiz.label;
   let outcome = totalScore <= 8 ? quiz.outcomes.green.verdict : totalScore <= 17 ? quiz.outcomes.amber.verdict : quiz.outcomes.red.verdict;
-  const text = `I just took the "Am I Overtrading?" quiz as a ${styleLabel} and scored ${totalScore}/27 — ${outcome}. Find out where you stand 👇 neverovertrade.com`;
+  const text = `I just took the "Am I Overtrading?" quiz as a ${styleLabel} and scored ${totalScore}/27 — ${outcome}. Find out where you stand 👇 overtradescore.github.io`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
   } else { showToast('Share: ' + text); }
