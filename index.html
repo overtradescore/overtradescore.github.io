@@ -1290,11 +1290,11 @@
 <!-- html2canvas for result screenshot -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  /* Share card — hidden, rendered offscreen for screenshot */
+  /* Share card — hidden until capture */
   .share-card {
     position: fixed;
     left: -9999px;
-    top: 0;
+    top: 20px;
     width: 600px;
     background: #04050f;
     border: 1px solid rgba(255,255,255,0.08);
@@ -1302,6 +1302,15 @@
     padding: 2.5rem;
     font-family: 'Outfit', sans-serif;
     overflow: hidden;
+    z-index: -1;
+  }
+
+  .share-card.capturing {
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .share-card-bg {
@@ -1797,6 +1806,8 @@ function showResult() {
   }, 300);
 }
 
+let capturedCanvas = null;
+
 function shareResult() {
   const quiz = QUIZZES[currentQuiz];
   const styleLabel = quiz.label;
@@ -1804,7 +1815,6 @@ function shareResult() {
   const outcome = quiz.outcomes[outcomeKey];
   const pct = (totalScore / 27 * 100);
 
-  // Colour maps
   const colours = {
     green: { score: '#34d399', marker: '#10b981' },
     amber: { score: '#fbbf24', marker: '#f59e0b' },
@@ -1825,64 +1835,70 @@ function shareResult() {
   document.getElementById('scMarker').style.background = col.score;
   document.getElementById('scMarker').style.boxShadow = `0 0 10px ${col.score}`;
 
-  // Check if Web Share API with files is supported (mobile)
   const btn = document.getElementById('btnShare');
-  btn.textContent = 'Generating...';
-  btn.classList.add('loading');
 
-  html2canvas(document.getElementById('shareCard'), {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true,
-    logging: false
-  }).then(canvas => {
-    btn.textContent = 'Share My Score ↗';
-    btn.classList.remove('loading');
+  // Mobile — native share sheet with image
+  if (navigator.canShare) {
+    btn.textContent = 'Generating...';
+    btn.classList.add('loading');
 
-    canvas.toBlob(blob => {
-      const file = new File([blob], 'my-overtradescore.png', { type: 'image/png' });
+    const card = document.getElementById('shareCard');
+    card.classList.add('capturing');
 
-      // Try native share with image (works on mobile)
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          title: 'My OvertradeScore',
-          text: `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict} as a ${styleLabel}. Find out what yours is 👇`,
-          url: 'https://overtradescore.github.io',
-          files: [file]
-        }).catch(() => fallbackShare(canvas));
-      } else {
-        fallbackShare(canvas);
-      }
-    }, 'image/png');
-  }).catch(() => {
-    btn.textContent = 'Share My Score ↗';
-    btn.classList.remove('loading');
-    fallbackTextShare();
-  });
-}
+    setTimeout(() => {
+      html2canvas(card, {
+        backgroundColor: '#04050f',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: 600,
+        height: card.offsetHeight
+      }).then(canvas => {
+        capturedCanvas = canvas;
+        card.classList.remove('capturing');
+        btn.textContent = 'Share My Score ↗';
+        btn.classList.remove('loading');
 
-function fallbackShare(canvas) {
-  // Try downloading the image
-  try {
-    const link = document.createElement('a');
-    link.download = 'my-overtradescore.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    showToast('Image saved! Share it anywhere 🎉');
-  } catch(e) {
-    fallbackTextShare();
+        canvas.toBlob(blob => {
+          const file = new File([blob], 'my-overtradescore.png', { type: 'image/png' });
+          if (navigator.canShare({ files: [file] })) {
+            navigator.share({
+              title: 'My OvertradeScore',
+              text: `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict} as a ${styleLabel}. Find out what yours is 👇`,
+              url: 'https://overtradescore.github.io',
+              files: [file]
+            }).catch(() => desktopCopyShare(styleLabel, outcome));
+          } else {
+            desktopCopyShare(styleLabel, outcome);
+          }
+        }, 'image/png');
+      }).catch(() => {
+        card.classList.remove('capturing');
+        btn.textContent = 'Share My Score ↗';
+        btn.classList.remove('loading');
+        desktopCopyShare(styleLabel, outcome);
+      });
+    }, 100);
+
+  } else {
+    // Desktop — copy text to clipboard
+    desktopCopyShare(styleLabel, outcome);
   }
 }
 
-function fallbackTextShare() {
-  const quiz = QUIZZES[currentQuiz];
-  const outcomeKey = totalScore <= 8 ? 'green' : totalScore <= 17 ? 'amber' : 'red';
-  const outcome = quiz.outcomes[outcomeKey];
-  const text = `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict} as a ${quiz.label}. Find out what yours is 👇 overtradescore.github.io`;
+function desktopCopyShare(styleLabel, outcome) {
+  const shareTexts = {
+    'Scalper': `My OvertradeScore was ${totalScore}/27 as a Scalper — ${outcome.verdict}. Are you overtrading? Find out what your score is 👇 overtradescore.github.io`,
+    'Intraday': `My OvertradeScore was ${totalScore}/27 as an Intraday Trader — ${outcome.verdict}. Are you overtrading? Find out what your score is 👇 overtradescore.github.io`,
+    'Swing Trader': `My OvertradeScore was ${totalScore}/27 as a Swing Trader — ${outcome.verdict}. Are you overtrading? Find out what your score is 👇 overtradescore.github.io`,
+  };
+
+  const text = shareTexts[styleLabel] || `My OvertradeScore was ${totalScore}/27 — ${outcome.verdict}. Find out what your score is 👇 overtradescore.github.io`;
+
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard! Paste it anywhere to share 🎉'));
   } else {
-    showToast(text);
+    showToast('Score: ' + text);
   }
 }
 
