@@ -6,8 +6,9 @@
 <title>OvertradeScore — Am I Overtrading?</title>
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE+klEQVR42sWX608UVxjG+dRdmF122RtlF1jYuiwXgYWmysVdWYSKaMXSmloR/SCUStNqL0CjldALHyqINJZYwFjFpKANGFK1pRcvjbHamDZogpE7pl/6Vzydc2Zm98zMzmKbpv3w5DDMnPf5ve+cOfueOJ3eGaeWq0avd7Xp41NBFB+fJighnSohhqRnpDlSDBKPxFV6Kc2b+YdW+IdF49SwccTELROnuBbEwFCQMARIfMFHDXBMR4zD5mkKc9GQy1hVLIiqGgIEBL8IACGCduZyYyvnQ6m1Ai+66tCYXo9daVtR4SiHncuKAqJVCSdRswSwohPN9THMt6c24mpgEj+HJnC3cgzTm0bwqOo0lqu/wMLmQTx4YQi36ofwUs5OTQjJQ6zCCjGvkWevNg85GzAWvI7J4BSmKr7BDR7gFx7gXmgE9zcOY6FyAPM8wO87hnFz9wiu7B/FhQNfo7LgZW0IsQoEoE2nKD1r/pF/El8GbmM0eBPjwZ/Qnt2FHGspjMY1SGRErvNs69AZeBeXmi/g3NuXcKrjMo60npVDMK+C+MbFyr67+A4Gyn/D8Ia7OJJ7BkbDMwpjL6MICHnu8K4+HD/6LT7u/hFtXZc1q6ACkMwPFlxDT9kM+svvI+BsUph7YSJKzIqIAZEgykoa8H7PDbx18hZ2d12UVYEBUJe/MHkfPixbxCelcyhLeV0w5xU2Z4yfTloruw5DiHOKgnvRNHgHe87eg7dir+o1MACR8rcU3kZn6WM0+iZgMHjk5iKAOdFHNVR7NPy3qhL8PDL/+cMj2DE2jdqLD1SvIQqAGzZjMUrT2mHgMtUANFPBsC63DuP1n9JRAPCpqkDmkzhVEzMIXnmE1O2tqwNw4hegBUAzNmXjs+oOLLeM0pFcm2MA+NoH4L+2hKKp2X8RYFM7lvd/RcfVACw5IWyZfIg9380j2Z4fCyA9NgAD0R96D0v7ztMx1hogcRz8vQ+uz2L04Z9w2ws1ABSbEAsQ7Svo3/gOlhrP0VHrK5AASDxfyjr4Mypg5OPLAaLsA8JenkknW015CHiaZRsQMTux4RAWXz1DR9Y8AiCZCwAmkw/Jyf7YG5FyHSQa1qDB34fW9eeZKggQfWUHsbDzNB2jmjPZk3hJSdk8QKEaINZrIME+r/2DSiqrtCP2lbyJhfpBOrI7IAX1lkfMxd8CqzUPDkcEQCcD0Pg9IMF6qx9TCeshsiaOP/cG5utO0DEMJ2Zu2dYEzpIt+yGyOwpgs+XLGhMRgK2CfC0YOA+6Q8tUBnFNGEST3mcPYG7rAB0NTMlNxVvg+mEGru9nZN0Ref9ms5ftB1gAp6odI5MIQGdgkYpdmES9RS2YqzlJR+l/5L7Rvxm2q9NUkrnVmksBFB2RHCBaT2hIyERHyQIVp2jNegpew2xVPx1lfWFBFbjxX6mkShJziyWX7QmjAUSH4BI8cFtqVN0wMTuU9Up4lbP3n8qvhN6YSec7+HdPFp/SXANADcHxVUgxl0dtzxsztkVtx3We9dAbMmDnt12SPce5VeYxAOQQsjadOaBEVXj9uGnmxNxo9EQ1Z3pCLQhxYTIgKhiFyH3yvRNjUnYhc+344a44tlyqikji+DKb+R1O2GSEjMluZ7HkaGatBBDPBU48mRgYXjZbJFubfS0STV48eSzhXBA+Gf0PalacDf9T82Map+O/8zr+kWSn478AXINRmUM+zuEAAAAASUVORK5CYII=">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE+klEQVR42sWX608UVxjG+dRdmF122RtlF1jYuiwXgYWmysVdWYSKaMXSmloR/SCUStNqL0CjldALHyqINJZYwFjFpKANGFK1pRcvjbHamDZogpE7pl/6Vzydc2Zm98zMzmKbpv3w5DDMnPf5ve+cOfueOJ3eGaeWq0avd7Xp41NBFB+fJighnSohhqRnpDlSDBKPxFV6Kc2b+YdW+IdF49SwccTELROnuBbEwFCQMARIfMFHDXBMR4zD5mkKc9GQy1hVLIiqGgIEBL8IACGCduZyYyvnQ6m1Ai+66tCYXo9daVtR4SiHncuKAqJVCSdRswSwohPN9THMt6c24mpgEj+HJnC3cgzTm0bwqOo0lqu/wMLmQTx4YQi36ofwUs5OTQjJQ6zCCjGvkWevNg85GzAWvI7J4BSmKr7BDR7gFx7gXmgE9zcOY6FyAPM8wO87hnFz9wiu7B/FhQNfo7LgZW0IsQoEoE2nKD1r/pF/El8GbmM0eBPjwZ/Qnt2FHGspjMY1SGRErvNs69AZeBeXmi/g3NuXcKrjMo60npVDMK+C+MbFyr67+A4Gyn/D8Ia7OJJ7BkbDMwpjL6MICHnu8K4+HD/6LT7u/hFtXZc1q6ACkMwPFlxDT9kM+svvI+BsUph7YSJKzIqIAZEgykoa8H7PDbx18hZ2d12UVYEBUJe/MHkfPixbxCelcyhLeV0w5xU2Z4yfTloruw5DiHOKgnvRNHgHe87eg7dir+o1MACR8rcU3kZn6WM0+iZgMHjk5iKAOdFHNVR7NPy3qhL8PDL/+cMj2DE2jdqLD1SvIQqAGzZjMUrT2mHgMtUANFPBsC63DuP1n9JRAPCpqkDmkzhVEzMIXnmE1O2tqwNw4hegBUAzNmXjs+oOLLeM0pFcm2MA+NoH4L+2hKKp2X8RYFM7lvd/RcfVACw5IWyZfIg9380j2Z4fCyA9NgAD0R96D0v7ztMx1hogcRz8vQ+uz2L04Z9w2ws1ABSbEAsQ7Svo3/gOlhrP0VHrK5AASDxfyjr4Mypg5OPLAaLsA8JenkknW015CHiaZRsQMTux4RAWXz1DR9Y8AiCZCwAmkw/Jyf7YG5FyHSQa1qDB34fW9eeZKggQfWUHsbDzNB2jmjPZk3hJSdk8QKEaINZrIME+r/2DSiqrtCP2lbyJhfpBOrI7IAX1lkfMxd8CqzUPDkcEQCcD0Pg9IMF6qx9TCeshsiaOP/cG5utO0DEMJ2Zu2dYEzpIt+yGyOwpgs+XLGhMRgK2CfC0YOA+6Q8tUBnFNGEST3mcPYG7rAB0NTMlNxVvg+mEGru9nZN0Ref9ms5ftB1gAp6odI5MIQGdgkYpdmES9RS2YqzlJR+l/5L7Rvxm2q9NUkrnVmksBFB2RHCBaT2hIyERHyQIVp2jNegpew2xVPx1lfWFBFbjxX6mkShJziyWX7QmjAUSH4BI8cFtqVN0wMTuU9Up4lbP3n8qvhN6YSec7+HdPFp/SXANADcHxVUgxl0dtzxsztkVtx3We9dAbMmDnt12SPce5VeYxAOQQsjadOaBEVXj9uGnmxNxo9EQ1Z3pCLQhxYTIgKhiFyH3yvRNjUnYhc+344a44tlyqikji+DKb+R1O2GSEjMluZ7HkaGatBBDPBU48mRgYXjZbJFubfS0STV48eSzhXBA+Gf0PalacDf9T82Map+O/8zr+kWSn478AXINRmUM+zuEAAAAASUVORK5CYII=">
+
 
 <meta name="description" content="Find out if you're overtrading in 2 minutes. Free self-assessment quiz for scalpers, intraday traders and swing traders. Get your OvertradeScore now.">
 <meta name="keywords" content="overtrading, am I overtrading, overtrading quiz, trading discipline, scalper, intraday trader, swing trader, trading psychology, overtrading test">
@@ -959,6 +960,42 @@
 
   @media (max-width: 480px) { .result-actions { flex-direction: column; } }
 
+  .btn-guide {
+    display: block;
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 1.1rem 1.5rem;
+    border: none;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #7c3aed, #ec4899, #06b6d4);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 28px rgba(124,58,237,0.45);
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    animation: rise 0.7s ease forwards 0.4s;
+  }
+
+  .btn-guide:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba(124,58,237,0.6);
+  }
+
+  .btn-guide-label {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+  }
+
   .btn-retake {
     flex: 1;
     font-family: var(--font-mono);
@@ -1604,6 +1641,11 @@
       <div class="result-section-label" id="actionLabel" style="display:none">What To Do Now</div>
       <ul class="action-list" id="actionList"></ul>
     </div>
+
+    <a class="btn-guide" href="https://overtradescore.gumroad.com/l/overtradingfix" target="_blank" rel="noopener">
+      Stop Overtrading — Get the Fix
+      <span class="btn-guide-label">10 Chapters · 7-Step Framework · 90-Day Roadmap</span>
+    </a>
 
     <div class="result-actions">
       <button class="btn-retake" onclick="goHome()">← Try Another Style</button>
